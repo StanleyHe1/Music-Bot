@@ -1,1 +1,1 @@
-List of Discord Bots for Personal Uses
+Discord music bot for personal use
