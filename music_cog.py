@@ -81,7 +81,7 @@ class MusicCog(commands.Cog):
             self.vc.resume()
 
     @commands.command(name='resume', aliases=['r'], help="Resumes the current song being played")
-    async def pause(self, ctx, *args):
+    async def resume(self, ctx, *args):
         if self.is_paused:
             self.is_playing = True
             self.is_paused = False
