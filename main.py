@@ -23,13 +23,6 @@ async def setup():
 async def on_ready():
     print(f'Logged in as {bot.user}')
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
-    
-    await bot.process_commands(message)
-    
 async def main():
     await setup()
     print("setup done")
