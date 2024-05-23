@@ -20,7 +20,7 @@ class MusicCog(commands.Cog):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
                 info = ydl.extract_info("ytsearch:%s" % item, download=False)['entries'][0]
-            except Exception:
+            except:
                 return False
         return {'source': info['url'], 'title': info['title']}
     
