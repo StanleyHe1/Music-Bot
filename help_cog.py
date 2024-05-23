@@ -34,3 +34,6 @@ General commands:
     @commands.command(name="help", help="Displays all the available commands")
     async def help(self, ctx):
         await ctx.send(self.help_message)
+    
+def setup(bot):
+    bot.add_cog(HelpCog(bot))
