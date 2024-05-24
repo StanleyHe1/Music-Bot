@@ -11,7 +11,7 @@ class MusicCog(commands.Cog):
         self.is_paused = False
 
         self.music_queue = []
-        self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+        self.YDL_OPTIONS = {'format': 'bestaudio/best', 'noplaylist': 'True'}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
         self.vc = None
@@ -34,22 +34,24 @@ class MusicCog(commands.Cog):
             self.is_playing = False
 
     async def play_music(self, ctx):
-        if len(self.music_queue) > 0:
-            self.is_playing = True
-            m_url = self.music_queue[0][0]['source']
-            if self.vc == None or not self.vc.is_connected():
-                self.vc = await self.music_queue[0][1].connect()
-                if self.vc == None:
-                    await ctx.send("Could not connect to the voice channel")
-                    return
+        try:
+            if len(self.music_queue) > 0:
+                self.is_playing = True
+                m_url = self.music_queue[0][0]['source']
+                if self.vc == None or not self.vc.is_connected():      
+                    self.vc = await self.music_queue[0][1].connect()
+                    print("2")
+                    if self.vc == None:
+                        await ctx.send("Could not connect to the voice channel")
+                        return
+                else:
+                    await self.vc.move_to(self.music_queue[0][1])
+                self.music_queue.pop(0)
+                self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda x: self.play_next())
             else:
-                await self.vc.move_to(self.music_queue[0][1])
-
-            self.music_queue.pop(0)
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda x: self.play_next())
-        else:
-            self.is_playing = False
-
+                self.is_playing = False
+        except Exception as err:
+            print(f"{type(err).__name__} was raised: {err}")
     
     @commands.command(name='play', aliases=['p', 'playing'], help='Play the selected song from youtube')
     async def play(self, ctx, *args):
@@ -117,6 +119,3 @@ class MusicCog(commands.Cog):
         self.is_playing = False
         self.is_paused = False
         await self.vc.disconnect()
-
-def setup(bot):
-    bot.add_cog(MusicCog(bot))
