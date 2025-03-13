@@ -1,33 +1,20 @@
 import discord
 from discord.ext import commands
 
-class HelpCog(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self.help_message = """
-```
-General commands:
-!help - displays all the available commands
-!q - displays the current music queue
-!p <keywords> - finds the song on youtube and plays it in your current channel. Will resume playing the current song if it was paused
-!skip - skips the current song being played
-!clear - Stops the music and clears the queue
-!leave - Disconnect the bot from the voice channel
-!pause - pauses the current song being played or resumes if already paused
-!resume - resumes playing the current song
-```
+def __init__(self, bot):
+    self.bot = bot
+    self.help_message = """
+**General Commands:**
+`!help` - Displays all commands
+`!p <keywords>` - Play a song from YouTube
+`!skip` - Skip current song
+`!pause`/`!resume` - Pause/Resume playback
+`!q` - Show the queue
+`!clear` - Clear the queue
+`!leave` - Disconnect the bot
 """
-        self.text_channel_text = []
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        pass
     
-    async def send_to_all(self, msg):
-        for text_channel in self.text_channel_text:
-            await text_channel.send(msg)
-        
-    @commands.command(name="help", help="Displays all the available commands")
-    async def help(self, ctx):
-        await ctx.send(self.help_message)
-    
+@commands.command(name="help")
+async def help(self, ctx):
+    embed = discord.Embed(title="Help", description=self.help_message, color=0x00ff00)
+    await ctx.send(embed=embed)

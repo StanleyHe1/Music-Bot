@@ -21,9 +21,7 @@ async def setup():
 async def on_message(msg):
     if msg.author == bot.user:
         return
-    print(msg.content)
     await bot.process_commands(msg)
-    print(msg.content)
 
 @bot.event
 async def on_ready():
